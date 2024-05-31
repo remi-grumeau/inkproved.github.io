@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Inkproved - Variables</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../ink/css/inkproved.css">
+</head>
+
+<body>
+
+    <div id="ink__container">
+        <div id="ink__story"></div>
+    </div>
+
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1em;padding-top:1em;border-top:1px solid #aaa">
+        <button onclick="logVariable('_whereAmI')">Get _WhereAmI variable value</button>
+        <button onclick="logVariable('_temperature')">Get _temperature variable value</button>
+        <button onclick="_INK.setVariable('_temperature',18)">Set _temperature variable to 18°</button>
+
+        <div id="log"></div>
+    </div>
+
+
+
+    <script src="../../ink/scripts/ink.js"></script>
+    <script src="../../ink/scripts/inkproved.js"></script>
+    <script src="mystory.js"></script>
+
+    <script>
+    // FIRST LOAD STORY WITH AUTOSTART TO FALSE
+    _INK.loadStory(storyContent,false);
+
+    // SET VARIABLES IN INK
+
+        // FIRST, SET THE CURRENT DAY
+        let _daysName = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+        let _dayName  = _daysName[new Date().getDay()];
+        _INK.setVariable("_day", _dayName );
+
+
+        // SECOND SET THE DAY TIME BASED ON THE ACTUAL HOUR
+        let _daytime,_hour = new Date().getHours();
+        if(_hour<=6 || _hour>=20)
+            _daytime = 'night';
+        else if(_hour<12)
+            _daytime = 'morning';
+        else if(_hour<14)
+            _daytime = 'noon';
+        else if(_hour<20)
+            _daytime = 'afternoon';
+        _INK.setVariable("_daytime",_daytime);
+
+
+        _INK.setVariable('_temperature',15);
+
+
+    // SET LISTENERS ON VARIABLES
+    _INK.listenVariables(['_whereAmI']);
+
+    // START INK STORY NOW THAT ALL VARIABLES ARE SET
+    _INK.start();
+
+
+    // WILL BE TRIGGERED EVERYTIME THE VARIABLE WITH THE SAME NAME IS MODIFIED IN INK
+    function _whereAmI(varName,newValue){
+        document.getElementById('log').innerHTML += '<p>'+varName+' variable got updated in Ink to : '+newValue+'</p>';
+    }
+
+    function logVariable(variableName){
+        document.getElementById('log').innerHTML += '<p>'+variableName+' variable value is : '+_INK.getVariable(variableName)+'</p>';
+    }
+
+    </script>
+
+
+</body>
+</html>
